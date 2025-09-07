@@ -65,10 +65,10 @@ management:
     tags:
       application: ${spring.application.name}
 
-# Logging
-logging:
-  file:
-    path: /u01/HDDT/log
+## Logging
+#logging:
+#  file:
+#    path: /u01/HDDT/log
 
 
 resilience4j:

@@ -1,0 +1,124 @@
+# info
+info:
+  app:
+    name: @project.name@
+    description: @project.description@
+    version: @project.version@
+    encoding: @project.build.sourceEncoding@
+    java:
+      version: @java.version@
+
+# Server
+server:
+  port: 8000
+  tomcat:
+    accept-count: 1000
+
+# Spring
+spring:
+  application:
+    name: tmdt-config
+  datasource:
+    url: jdbc:oracle:thin:@localhost:1521:ORACLCDB
+    username: locit
+    password: 27112003
+    driver-class-name: oracle.jdbc.OracleDriver
+
+  jpa:
+    database-platform: org.hibernate.dialect.Oracle12cDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+#  security:
+#    user:
+#      name: admin
+#      password: 27112003
+  sleuth:
+    sampler:
+      probability: 1
+  zipkin:
+    base-url: http://localhost:9411
+  cloud:
+    config:
+      server:
+        default-profile: prod
+        default-label: latest
+        encrypt:
+          enabled: false
+    bus:
+      destination: service-cloud-bus
+    stream:
+      kafka:
+        binder:
+          brokers: http://localhost:9092
+          configuration:
+            client.id: ${spring.application.name}-bus
+            security.protocol: SASL_PLAINTEXT
+            sasl.mechanism: SCRAM-SHA-256
+            sasl.jaas.config: org.apache.kafka.common.security.scram.ScramLoginModule required username="admin" password="hddtkad12#" ;
+#  data:
+#    cassandra:
+#      contact-points: 10.100.131.137:9042, 10.100.131.130:9042, 10.100.131.131:9042
+#      local-datacenter: DC1
+#      keyspace-name: hddt_system
+#      username: teca_admin
+#      password: teca@12#
+#      request:
+#        consistency: local_one
+#        serial-consistency: local_serial
+#      connection:
+#        init-query-timeout: 1000
+  messages:
+    basename: messages
+    encoding: UTF-8
+#  jackson:
+#    time-zone: Asia/Ho_Chi_Minh
+#    date-format: dd/MM/yyyy HH:mm:ss
+
+# Eureka
+eureka:
+  instance:
+    lease-renewal-interval-in-seconds: 10
+    health-check-url-path: /actuator/health
+    metadata-map:
+      startup: ${random.int}    #needed to trigger info and endpoint update after restart
+    prefer-ip-address: true
+  client:
+    registry-fetch-interval-seconds: 5
+    service-url:
+      defaultZone: http://admin:27112003@localhost:8081/
+
+# Management
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    tags:
+      application: ${spring.application.name}
+
+# Logging
+logging:
+  file:
+    path: /var/log
+
+# JWT
+#jwt.secret: hddt
+
+# Services
+#rest:
+#  connectTimeout: 30s
+#  readTimeout: 30s
+#  services:
+#    security-official: http://hddt-security-official
+#    security-taxpayer: http://hddt-security-taxpayer
+
+tmdt:
+  table-config-name: tmdt_service_config
